@@ -9,21 +9,29 @@
 
 以下步骤**只需要做一次**，之后日常发文只有 `git push` 一步。
 
+> **当前服务器现状**（2026-08 探测）：`121.40.45.174`，Nginx 1.24.0 已在运行，
+> `api.hanchangzhang.top` 反代着你的 Go API（证书有效期至 2026-11-04）。
+> 下面的所有步骤都**不影响** api 子域的现有服务。
+
 ---
 
 ## 一、服务器准备（一次性）
 
-假设服务器是 Ubuntu/Debian，以 root 或有 sudo 权限的用户登录：
+Nginx 已装好，只需新增博客站点。先确认你现有配置的存放方式：
 
 ```bash
-# 1. 安装 Nginx 和 certbot
-sudo apt update
-sudo apt install -y nginx certbot python3-certbot-nginx
+ls /etc/nginx/sites-enabled/ 2>/dev/null || ls /etc/nginx/conf.d/
+```
 
-# 2. 创建网站目录（GitHub Actions 会把构建产物同步到这里）
+- 如果是 **sites-enabled**（Ubuntu/Debian 默认）：用下面第 3 步的软链方式
+- 如果是 **conf.d**：把配置文件直接放到 `/etc/nginx/conf.d/blog.conf`，
+  并把文件里的 `server_name` 以外的内容保持不变
+
+```bash
+# 1. 创建网站目录（GitHub Actions 会把构建产物同步到这里）
 sudo mkdir -p /var/www/blog
 
-# 3. 部署 Nginx 配置（本文件在仓库 deploy/nginx.conf）
+# 2. 部署 Nginx 配置（本文件在仓库 deploy/nginx.conf）
 #    先把 deploy/nginx.conf 上传到服务器，例如：
 #    scp deploy/nginx.conf user@服务器IP:/tmp/blog-nginx.conf
 sudo cp /tmp/blog-nginx.conf /etc/nginx/sites-available/blog
@@ -31,29 +39,37 @@ sudo ln -s /etc/nginx/sites-available/blog /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-## 二、DNS 解析（一次性）
+> ⚠️ 注意：`deploy/nginx.conf` 里的 server_name 是 `hanchangzhang.top www.hanchangzhang.top`，
+> 与 api 子域的 server 块互不冲突，可以放心加载。`nginx -t` 通过再 reload。
 
-到域名服务商控制台，把 `hanchangzhang.top` 从 GitHub Pages 切到你的服务器：
+## 二、清理残留 DNS 解析（一次性）
 
-| 记录类型 | 主机记录 | 记录值 |
-|---------|---------|-------|
-| A | @ | 服务器公网 IP |
-| A | www | 服务器公网 IP |
+`hanchangzhang.top` 目前有**两条 A 记录**：一条已指向你的服务器（保留），
+另一条 `185.199.108.153` 是 GitHub Pages 的残留（删除）。
 
-> ⚠️ 切换前，去 GitHub 仓库 `Jack-Ken/Jack-Ken.github.io` 的
-> Settings -> Pages 里移除自定义域名，避免两边抢解析。
+到阿里云 DNS 控制台操作：
 
-> ⚠️ 如果服务器在中国大陆，`.top` 域名需要 ICP 备案后才能通过 80/443 对外访问。
+1. **删除** `@` 记录中值为 `185.199.108.153` 的那条 A 记录
+2. **保留** `@` 和 `www` 指向 `121.40.45.174` 的记录（已就位，无需改动）
+3. 去 GitHub 仓库 `Jack-Ken/Jack-Ken.github.io` 的 Settings -> Pages 里
+   **移除自定义域名**（Custom domain 清空），让 GitHub 彻底放手
+
+改完用 `dig +short hanchangzhang.top` 确认只剩 `121.40.45.174` 一条。
 
 ## 三、HTTPS 证书（一次性）
 
-DNS 生效后（`ping hanchangzhang.top` 返回你的服务器 IP 即生效）：
+DNS 清理生效后：
 
 ```bash
+# 服务器上如果还没装 certbot：
+sudo apt install -y certbot python3-certbot-nginx
+
 sudo certbot --nginx -d hanchangzhang.top -d www.hanchangzhang.top
 ```
 
-证书自动续期已由 certbot 的 systemd timer 处理，无需关心。
+> 你现在 api 子域用的证书是阿里云免费证书（3 个月有效期，需手动续）。
+> 博客这里用 certbot 是因为它自动续期、不用惦记；两个证书各管各的域名，互不影响。
+> 如果你更习惯阿里云控制台，也可以再申请一张免费证书给根域名，只是每 3 个月要手动换一次。
 
 ## 四、给 GitHub Actions 用的部署密钥（一次性）
 
