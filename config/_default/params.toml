@@ -1,0 +1,72 @@
+# -- 主题参数（Blowfish）--
+# 完整参数说明：https://blowfish.page/docs/configuration/
+
+colorScheme = "blowfish"     # 可换: blowfish / avocado / ocean / fire / prairie / slate
+defaultAppearance = "light"  # light / dark
+autoSwitchAppearance = true  # 跟随系统深浅色
+
+enableSearch = true          # 顶栏搜索按钮 + Fuse.js 全文搜索
+enableCodeCopy = true        # 代码块复制按钮
+
+mainSections = ["posts"]
+
+fingerprintAlgorithm = "sha512"
+
+[header]
+  layout = "fixed-fill-blur" # 滚动时顶栏毛玻璃效果
+
+[footer]
+  showMenu = true
+  showCopyright = true
+  showThemeAttribution = true
+  showAppearanceSwitcher = true  # 页脚深浅色切换按钮
+  showScrollToTop = true
+
+[homepage]
+  layout = "profile"        # 首页：头像 + 简介 + 最近文章
+  showRecent = true
+  showRecentItems = 6
+  showMoreLink = true
+  showMoreLinkDest = "/posts/"
+  cardView = true           # 最近文章以卡片展示
+
+[article]
+  showDate = true
+  showAuthor = true
+  showBreadcrumbs = true    # 面包屑
+  showDraftLabel = true
+  showHeadingAnchors = true # 标题锚点
+  showPagination = true     # 上一篇/下一篇
+  showReadingTime = true
+  showReadingProgress = true # 顶部阅读进度条
+  showTableOfContents = true
+  showTaxonomies = true     # 显示分类和标签
+  showCategories = true
+  showTags = true
+  showWordCount = true
+  showZenMode = true        # 阅读免打扰模式
+  showComments = false      # 开启 Giscus 评论时改为 true
+
+[list]
+  showHero = false
+  showBreadcrumbs = true
+  showSummary = true
+  showCards = true
+  cardView = true           # 列表页卡片式布局
+  groupByYear = true
+
+[taxonomy]
+  showTermCount = true
+  showBreadcrumbs = true
+
+[term]
+  showBreadcrumbs = true
+  showTableOfContents = true
+
+# ---- 访问统计（Umami，自托管）----
+# 服务器上跑起 Umami 后取消注释并填入实际值（见 DEPLOY.md 第六节）
+# [umamiAnalytics]
+#   websiteid = "替换为你的 website id"
+#   domain = "umami.hanchangzhang.top"
+#   dataDomains = "hanchangzhang.top"
+#   enableTrackEvent = true

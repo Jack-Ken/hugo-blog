@@ -1,0 +1,12 @@
+/* 中文排版微调 */
+.prose {
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+}
+
+/* 文章表格横向滚动，避免窄屏溢出 */
+.prose table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}

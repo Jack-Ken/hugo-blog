@@ -127,14 +127,13 @@ Nginx 反代和添加网站的步骤见 `deploy/umami/docker-compose.yml` 文件
 
 ## 七、评论：Giscus（可选）
 
+项目里已经预置了 `layouts/partials/comments.html`（Giscus 脚本模板），启用只需：
+
 1. 仓库 Settings -> General -> Features 勾选 **Discussions**
 2. 安装 [giscus app](https://github.com/apps/giscus) 并授权给该仓库
-3. 到 <https://giscus.app> 按提示选择仓库和分类，生成 `repo-id` / `category-id`
-4. 回到 `hugo.toml`，取消注释 `params.comments` 填入对应值，并把 `params.comments = false` 改为 `true`
-
-> 注意：PaperMod 不内置 Giscus 渲染，若启用评论需要按 giscus 文档在文章模板里
-> 加一段脚本，或者直接使用支持 Giscus 的主题变体。嫌麻烦可以先用 giscus 官方
-> 生成的代码片段放在 `layouts/partials/comments.html` 里试验。
+3. 到 <https://giscus.app> 按提示选择仓库和分类，把生成的 `repo-id` / `category-id`
+   填进 `layouts/partials/comments.html` 里对应的两个占位值
+4. `config/_default/params.toml` 里 `[article]` 的 `showComments` 改为 `true`
 
 ---
 
