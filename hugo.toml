@@ -1,0 +1,117 @@
+# ---------------------------------------------------------------------------
+# 站点基础信息
+# ---------------------------------------------------------------------------
+baseURL = "https://hanchangzhang.top/"
+title = "Ken 的博客"
+locale = "zh-cn"
+defaultContentLanguage = "zh-cn"
+theme = "PaperMod"
+enableEmoji = true
+enableRobotsTXT = true
+hasCJKLanguage = true          # 中文排版优化：正确的摘要截断和字数统计
+buildDrafts = false
+buildFuture = false
+paginate = 10
+
+# 输出格式：RSS 默认开启，这里显式声明，并给 HTML 加上 markdown 版本方便 SEO
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[markup]
+  [markup.highlight]
+    noClasses = false          # 使用 CSS 类而非内联样式，可自定义代码高亮主题
+    lineNos = false
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true            # 允许文章里的原生 HTML（旧文章迁移时需要）
+
+[permalinks]
+  posts = "/:year/:month/:slugorfilename/"
+
+# ---------------------------------------------------------------------------
+# PaperMod 主题配置
+# ---------------------------------------------------------------------------
+[params]
+  env = "production"
+  description = "记录 Go、后端开发与日常思考"
+  author = "Ken"
+  keywords = ["Go", "后端开发", "博客", "编程"]
+
+  defaultTheme = "auto"
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true      # 上一篇 / 下一篇
+  ShowBreadCrumbs = true       # 面包屑导航
+  ShowCodeCopyButtons = true
+  ShowWordCount = true         # 中文统计配合 hasCJKLanguage 是准确的字数
+  ShowToc = true               # 文章目录
+  TocOpen = false
+  comments = false             # 开启 Giscus 评论时改为 true（见下方 params.comments）
+  dateFormat = "2006-01-02"
+
+  # 首页：信息流模式 + 精选文章卡片
+  [params.homeInfoParams]
+    Title = "你好，我是 Ken 👋"
+    Content = "这里记录我的技术笔记与思考，主要关于 Go、后端开发和工程实践。"
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/Jack-Ken"
+
+  # 客户端全文搜索（基于 Fuse.js，纯静态，构建时生成索引）
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 4
+
+  # ---- 访问统计（Umami，自托管）----
+  # 在服务器上用 Docker 跑起 Umami 后，把下面两行取消注释并填入实际地址和 data-website-id
+  # [params.analytics.umami]
+  #   websiteID = "替换为你的 website id"
+  #   url = "https://umami.hanchangzhang.top/script.js"
+
+  # ---- 评论（Giscus，基于 GitHub Discussions）----
+  # 到 https://giscus.app 生成配置后取消注释并填入
+  # [params.comments]
+  #   enabled = true
+  #   giscusRepo = "Jack-Ken/blog"
+  #   giscusRepoId = "填入 giscus.app 给出的 repo id"
+  #   giscusCategory = "Announcements"
+  #   giscusCategoryId = "填入 giscus.app 给出的 category id"
+
+# ---------------------------------------------------------------------------
+# 菜单
+# ---------------------------------------------------------------------------
+[menus]
+  [[menus.main]]
+    identifier = "archives"
+    name = "归档"
+    url = "/archives/"
+    weight = 10
+  [[menus.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags/"
+    weight = 20
+  [[menus.main]]
+    identifier = "categories"
+    name = "分类"
+    url = "/categories/"
+    weight = 30
+  [[menus.main]]
+    identifier = "search"
+    name = "搜索"
+    url = "/search/"
+    weight = 40
+  [[menus.main]]
+    identifier = "about"
+    name = "关于"
+    url = "/about/"
+    weight = 50

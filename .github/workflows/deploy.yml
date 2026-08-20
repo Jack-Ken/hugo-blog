@@ -1,0 +1,45 @@
+# 说明：git push 到 main 分支后自动构建，并把静态文件 rsync 到你的服务器
+# 首次使用前，需要在 GitHub 仓库的 Settings -> Secrets and variables -> Actions
+# 里添加 4 个 secret，见 DEPLOY.md「配置 GitHub Actions 密钥」一节。
+name: Deploy blog
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # 支持在 GitHub 页面上手动触发
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout（含主题子模块）
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "latest"
+          extended: true
+
+      - name: Build
+        run: hugo --gc --minify
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Rsync to server
+        run: |
+          rsync -avz --delete \
+            -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=accept-new" \
+            public/ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_PATH }}
+
+      - name: Done
+        run: echo "✅ 已部署到 ${{ secrets.SSH_HOST }}，访问 https://hanchangzhang.top 查看"

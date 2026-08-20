@@ -1,0 +1,8 @@
+# Hugo 构建产物
+/public/
+/resources/_gen/
+.hugo_build.lock
+
+# 环境与编辑器
+.DS_Store
+*.lock
