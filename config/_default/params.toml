@@ -10,6 +10,7 @@ enableCodeCopy = true        # 代码块复制按钮
 
 mainSections = ["posts"]
 
+defaultSocialImage = "img/background.jpg"        # 社交分享时的预览图
 fingerprintAlgorithm = "sha512"
 
 [header]
@@ -22,8 +23,17 @@ fingerprintAlgorithm = "sha512"
   showAppearanceSwitcher = true  # 页脚深浅色切换按钮
   showScrollToTop = true
 
+[sitemap]
+  excludedKinds = []
+
+[verification]
+  # google = ""
+  # bing = ""
+
 [homepage]
-  layout = "profile"        # 首页：头像 + 简介 + 最近文章
+  layout = "background"      # 首页带背景图布局
+  homepageImage = "img/background.jpg"
+  layoutBackgroundBlur = true # 滚动时背景模糊效果
   showRecent = true
   showRecentItems = 6
   showMoreLink = true

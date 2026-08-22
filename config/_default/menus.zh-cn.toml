@@ -16,6 +16,16 @@
   weight = 30
 
 [[main]]
+  name = "系列"
+  pageRef = "series"
+  weight = 40
+
+[[main]]
+  name = "归档"
+  pageRef = "archives"
+  weight = 50
+
+[[main]]
   name = "关于"
   pageRef = "about"
-  weight = 40
+  weight = 60
