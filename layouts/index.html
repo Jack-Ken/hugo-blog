@@ -1,0 +1,86 @@
+{{ define "main" }}
+  {{ $homepageImage := "" }}
+  {{ with .Site.Params.homepage.homepageImage }}
+    {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
+      {{ $homepageImage = resources.GetRemote . }}
+    {{ else }}
+      {{ $homepageImage = resources.Get . }}
+    {{ end }}
+  {{ end }}
+
+  <section class="relative flex items-center justify-center overflow-hidden" style="min-height: 100vh;">
+    {{/* 背景图 */}}
+    {{ if $homepageImage }}
+      <img
+        class="absolute inset-0 h-full w-full object-cover nozoom"
+        src="{{ $homepageImage.RelPermalink }}"
+        role="presentation"
+        loading="eager"
+        fetchpriority="high">
+    {{ end }}
+    {{/* 渐变遮罩 */}}
+    <div class="absolute inset-0 bg-gradient-to-b from-neutral-900/70 via-neutral-900/50 to-neutral dark:from-neutral-900/80 dark:via-neutral-900/60 dark:to-neutral-800"></div>
+
+    {{/* Hero 内容 */}}
+    <div class="relative z-10 mx-auto max-w-3xl px-6 text-center">
+      {{ with .Site.Params.Author.image }}
+        {{ $authorImage := resources.Get . }}
+        {{ if $authorImage }}
+          {{ $img := $authorImage }}
+          {{ if not (eq $authorImage.MediaType.SubType "svg") }}
+            {{ $img = $authorImage.Fill "144x144 Center q90" }}
+          {{ end }}
+          <img
+            class="mx-auto mb-6 h-24 w-24 rounded-full border-2 border-white/30 shadow-lg"
+            width="96"
+            height="96"
+            src="{{ $img.RelPermalink }}"
+            alt="{{ $.Site.Params.Author.name }}">
+        {{ end }}
+      {{ end }}
+
+      <h1 class="mb-4 text-5xl font-extrabold tracking-tight text-white sm:text-7xl">
+        {{ .Site.Params.Author.name | default .Site.Title }}
+      </h1>
+
+      <div class="mb-8 h-12">
+        <span id="typewriter" class="text-xl text-neutral-200 sm:text-2xl"></span>
+        <span id="typewriter-cursor" class="text-xl text-primary-400 sm:text-2xl animate-pulse">|</span>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/posts/" class="rounded-full bg-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-primary-500">
+          浏览文章
+        </a>
+        <a href="/about/" class="rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-white/10">
+          关于我
+        </a>
+      </div>
+
+      {{/* 社交链接 */}}
+      <div class="mt-10 flex justify-center gap-4 text-2xl text-white/70">
+        {{ range .Site.Params.Author.links }}
+          {{ range $name, $url := . }}
+            <a href="{{ $url | safeURL }}" target="_blank" rel="me noopener noreferrer" class="transition hover:text-white" title="{{ $name | title }}">
+              {{ partial "icon.html" $name }}
+            </a>
+          {{ end }}
+        {{ end }}
+      </div>
+    </div>
+
+    {{/* 向下滚动指示 */}}
+    <div class="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-bounce">
+      <span class="text-sm text-white/60">↓ 向下滚动</span>
+    </div>
+  </section>
+
+  {{/* 打字机 JS */}}
+  {{ $typewriter := resources.Get "js/typewriter.js" | resources.Minify | resources.Fingerprint "sha512" }}
+  <script src="{{ $typewriter.RelPermalink }}" integrity="{{ $typewriter.Data.Integrity }}" defer></script>
+
+  {{/* 最近文章 */}}
+  <section class="mx-auto max-w-7xl px-6 py-16 sm:px-14 md:px-24 lg:px-32">
+    {{ partial "recent-articles/main.html" . }}
+  </section>
+{{ end }}

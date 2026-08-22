@@ -4,6 +4,7 @@ date: 2026-08-20
 draft: false
 tags: ["随笔"]
 categories: ["随笔"]
+featuredImage: "img/background.jpg"
 summary: "博客从 Hexo + GitHub Pages 迁移到 Hugo + 自建服务器，记录一下新工作流。"
 ---
 

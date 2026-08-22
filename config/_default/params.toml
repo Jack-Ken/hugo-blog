@@ -56,6 +56,8 @@ fingerprintAlgorithm = "sha512"
   showWordCount = true
   showZenMode = true        # 阅读免打扰模式
   showComments = false      # 开启 Giscus 评论时改为 true
+  showHero = true           # 文章顶部显示封面图
+  heroStyle = "background"  # 封面图全宽背景样式
 
 [list]
   showHero = false
